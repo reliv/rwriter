@@ -1,0 +1,12 @@
+[submodule "vendor/ZF2"]
+	path = vendor/ZF2
+	url = git://github.com/zendframework/zf2.git
+[submodule "vendor/reliv/ElFinder"]
+	path = vendor/reliv/ElFinder
+	url = git@github.com:reliv/zf2-elfinder.git
+[submodule "vendor/reliv/Rcm"]
+	path = vendor/reliv/Rcm
+	url = git@github.com:reliv/rcm.git
+[submodule "vendor/reliv/RcmPlugins"]
+	path = vendor/reliv/RcmPlugins
+	url = git@github.com:reliv/rcm-plugins.git
