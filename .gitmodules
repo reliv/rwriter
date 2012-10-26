@@ -10,3 +10,15 @@
 [submodule "vendor/reliv/RcmPlugins"]
 	path = vendor/reliv/RcmPlugins
 	url = git@github.com:reliv/rcm-plugins.git
+[submodule "doctrine/doctrine-module"]
+	path = doctrine/doctrine-module
+	url = git://github.com/doctrine/DoctrineModule.git
+[submodule "doctrine/common"]
+	path = doctrine/common
+	url = git://github.com/doctrine/common.git
+[submodule "doctrine/data-fixtures"]
+	path = doctrine/data-fixtures
+	url = git://github.com/doctrine/data-fixtures.git
+[submodule "symfony/console"]
+	path = symfony/console
+	url = git://github.com/symfony/Console.git
