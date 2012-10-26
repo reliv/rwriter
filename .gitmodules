@@ -22,3 +22,15 @@
 [submodule "vendor/symfony/console"]
 	path = vendor/symfony/console
 	url = git://github.com/symfony/Console.git
+[submodule "vendor/doctrine/doctrine-orm-module"]
+	path = vendor/doctrine/doctrine-orm-module
+	url = git://github.com/doctrine/DoctrineORMModule.git
+[submodule "vendor/doctrine/dbal"]
+	path = vendor/doctrine/dbal
+	url = git://github.com/doctrine/dbal.git
+[submodule "vendor/doctrine/orm"]
+	path = vendor/doctrine/orm
+	url = git://github.com/doctrine/doctrine2.git
+[submodule "vendor/doctrine/migrations"]
+	path = vendor/doctrine/migrations
+	url = git://github.com/doctrine/migrations.git
