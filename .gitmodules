@@ -1,6 +1,3 @@
-[submodule "vendor/ZF2"]
-	path = vendor/ZF2
-	url = git://github.com/zendframework/zf2.git
 [submodule "vendor/reliv/ElFinder"]
 	path = vendor/reliv/ElFinder
 	url = git@github.com:reliv/zf2-elfinder.git
@@ -10,27 +7,3 @@
 [submodule "vendor/reliv/RcmPlugins"]
 	path = vendor/reliv/RcmPlugins
 	url = git@github.com:reliv/rcm-plugins.git
-[submodule "vendor/doctrine/doctrine-module"]
-	path = vendor/doctrine/doctrine-module
-	url = git://github.com/doctrine/DoctrineModule.git
-[submodule "vendor/doctrine/common"]
-	path = vendor/doctrine/common
-	url = git://github.com/doctrine/common.git
-[submodule "vendor/doctrine/data-fixtures"]
-	path = vendor/doctrine/data-fixtures
-	url = git://github.com/doctrine/data-fixtures.git
-[submodule "vendor/symfony/console"]
-	path = vendor/symfony/console
-	url = git://github.com/symfony/Console.git
-[submodule "vendor/doctrine/doctrine-orm-module"]
-	path = vendor/doctrine/doctrine-orm-module
-	url = git://github.com/doctrine/DoctrineORMModule.git
-[submodule "vendor/doctrine/dbal"]
-	path = vendor/doctrine/dbal
-	url = git://github.com/doctrine/dbal.git
-[submodule "vendor/doctrine/orm"]
-	path = vendor/doctrine/orm
-	url = git://github.com/doctrine/doctrine2.git
-[submodule "vendor/doctrine/migrations"]
-	path = vendor/doctrine/migrations
-	url = git://github.com/doctrine/migrations.git
