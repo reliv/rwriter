@@ -2,8 +2,6 @@
 return array(
     'modules' => array(
 
-        'Application',
-
         //Rcm Dependencies
         'DoctrineModule',
         'DoctrineORMModule',
@@ -18,9 +16,11 @@ return array(
         'RcmLogin',
         'RcmSocialButtons',
         'RcmRssFeed',
+        'RcmGeneric',
 
         //MUST BE AT BOTTOM OF DEFINITION
         'ElFinder',
+        'Application',
     ),
     'module_listener_options' => array(
         'config_glob_paths' => array(
@@ -30,6 +30,7 @@ return array(
             './module',
             './vendor',
             './vendor/reliv',
+            './vendor/reliv/Rcm/themes',
             './vendor/reliv/RcmPlugins',
             './vendor/doctrine/doctrine-module/src',
             './vendor/doctrine/doctrine-orm-module/src',

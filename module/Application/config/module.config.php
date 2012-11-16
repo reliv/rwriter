@@ -15,7 +15,7 @@ return array(
                 'options' => array(
                     'route'    => '/',
                     'defaults' => array(
-                        'controller' => 'Rcm\Controller\IndexController',
+                        'controller' => 'rcmIndexController',
                         'action' => 'index',
                     ),
                 ),
@@ -26,7 +26,7 @@ return array(
                 'options' => array(
                     'route' => '[/:page][/:language][/:revision]',
                     'defaults' => array(
-                        'controller' => 'Rcm\Controller\IndexController',
+                        'controller' => 'rcmIndexController',
                         'action' => 'index',
                     )
                 ),
@@ -37,7 +37,7 @@ return array(
                 'options' => array(
                     'route' => '/install',
                     'defaults' => array(
-                        'controller' => 'Rcm\Controller\InstallController',
+                        'controller' => 'rcmInstallController',
                         'action' => 'index',
                     )
                 ),
