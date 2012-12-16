@@ -1,0 +1,13 @@
+web1:
+   name: rwriter
+   shared_writable_dir:
+     - data
+   document_root: public
+   php_extensions:
+     - oci8
+     - mysql
+     - apc
+     - gd
+     - imagemagick
+
+db1:
