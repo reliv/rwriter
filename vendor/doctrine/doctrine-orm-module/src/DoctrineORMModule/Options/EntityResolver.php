@@ -24,7 +24,6 @@ class EntityResolver extends AbstractOptions
      */
     protected $resolvers = array();
 
-
     /**
      * @param  string $eventManager
      * @return self
@@ -45,14 +44,15 @@ class EntityResolver extends AbstractOptions
     }
 
     /**
-     * @param array $resolvers
+     * @param  array                    $resolvers
      * @throws InvalidArgumentException
      */
     public function setResolvers(array $resolvers)
     {
         foreach ($resolvers as $old => $new) {
             if (!class_exists($new)) {
-                throw new InvalidArgumentException(sprintf(
+                throw new InvalidArgumentException(
+                    sprintf(
                         '%s is resolved to the entity %s, which does not exist',
                         $old,
                         $new

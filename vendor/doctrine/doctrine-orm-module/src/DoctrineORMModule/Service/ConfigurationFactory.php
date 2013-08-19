@@ -22,6 +22,7 @@ namespace DoctrineORMModule\Service;
 use DoctrineORMModule\Service\DBALConfigurationFactory as DoctrineConfigurationFactory;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\Exception\InvalidArgumentException;
+use Doctrine\ORM\Configuration;
 
 class ConfigurationFactory extends DoctrineConfigurationFactory
 {
@@ -29,7 +30,7 @@ class ConfigurationFactory extends DoctrineConfigurationFactory
     {
         /** @var $options \DoctrineORMModule\Options\Configuration */
         $options = $this->getOptions($serviceLocator);
-        $config  = new \Doctrine\ORM\Configuration();
+        $config  = new Configuration();
 
         $config->setAutoGenerateProxyClasses($options->getGenerateProxies());
         $config->setProxyDir($options->getProxyDir());
@@ -49,25 +50,23 @@ class ConfigurationFactory extends DoctrineConfigurationFactory
             $config->addNamedNativeQuery($name, $query['sql'], new $query['rsm']);
         }
 
-        foreach ($options->getCustomHydrationModes() AS $modeName => $hydrator) {
+        foreach ($options->getCustomHydrationModes() as $modeName => $hydrator) {
             $config->addCustomHydrationMode($modeName, $hydrator);
         }
-        
+
         foreach ($options->getFilters() as $name => $class) {
             $config->addFilter($name, $class);
         }
 
         $config->setMetadataCacheImpl($serviceLocator->get($options->getMetadataCache()));
         $config->setQueryCacheImpl($serviceLocator->get($options->getQueryCache()));
+        $config->setResultCacheImpl($serviceLocator->get($options->getResultCache()));
         $config->setMetadataDriverImpl($serviceLocator->get($options->getDriver()));
 
         if ($namingStrategy = $options->getNamingStrategy()) {
             if (is_string($namingStrategy)) {
                 if (!$serviceLocator->has($namingStrategy)) {
-                    throw new InvalidArgumentException(sprintf(
-                        'Naming strategy "%s" not found',
-                        $namingStrategy
-                    ));
+                    throw new InvalidArgumentException(sprintf('Naming strategy "%s" not found', $namingStrategy));
                 }
 
                 $config->setNamingStrategy($serviceLocator->get($namingStrategy));

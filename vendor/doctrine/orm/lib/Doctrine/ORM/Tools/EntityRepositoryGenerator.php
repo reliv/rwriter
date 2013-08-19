@@ -22,7 +22,7 @@ namespace Doctrine\ORM\Tools;
 /**
  * Class to generate entity repository classes
  *
- * 
+ *
  * @link    www.doctrine-project.org
  * @since   2.0
  * @author  Benjamin Eberlei <kontakt@beberlei.de>
@@ -50,6 +50,11 @@ class <className> extends EntityRepository
 }
 ';
 
+    /**
+     * @param string $fullClassName
+     *
+     * @return string
+     */
     public function generateEntityRepositoryClass($fullClassName)
     {
         $className = substr($fullClassName, strrpos($fullClassName, '\\') + 1, strlen($fullClassName));
@@ -58,13 +63,15 @@ class <className> extends EntityRepository
             '<namespace>' => $this->generateEntityRepositoryNamespace($fullClassName),
             '<className>' => $className
         );
+
         return str_replace(array_keys($variables), array_values($variables), self::$_template);
     }
 
     /**
-     * Generate the namespace statement, if class do not have namespace, return empty string instead
+     * Generates the namespace statement, if class do not have namespace, return empty string instead.
      * 
-     * @param string $fullClassName The full repository class name
+     * @param string $fullClassName The full repository class name.
+     *
      * @return string $namespace
      */
     private function generateEntityRepositoryNamespace($fullClassName)
@@ -73,7 +80,13 @@ class <className> extends EntityRepository
         
         return $namespace ? 'namespace ' . $namespace . ';' : '';
     }
-    
+
+    /**
+     * @param string $fullClassName
+     * @param string $outputDirectory
+     *
+     * @return void
+     */
     public function writeEntityRepositoryClass($fullClassName, $outputDirectory)
     {
         $code = $this->generateEntityRepositoryClass($fullClassName);

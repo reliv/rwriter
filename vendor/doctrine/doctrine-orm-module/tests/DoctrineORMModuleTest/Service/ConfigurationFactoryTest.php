@@ -21,10 +21,8 @@ namespace DoctrineORMModuleTest\Service;
 
 use PHPUnit_Framework_TestCase;
 use DoctrineORMModule\Service\ConfigurationFactory;
-use Doctrine\ORM\Configuration as ORMConfiguration;
 use Doctrine\Common\Cache\ArrayCache;
 use Zend\ServiceManager\ServiceManager;
-
 
 class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase
 {
@@ -48,8 +46,8 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase
         $this->serviceManager->setService('doctrine.cache.array', new ArrayCache());
         $this->serviceManager->setService(
             'doctrine.driver.orm_default',
-            $this->getMock('Doctrine\Common\Persistence\Mapping\Driver\MappingDriver'
-        ));
+            $this->getMock('Doctrine\Common\Persistence\Mapping\Driver\MappingDriver')
+        );
     }
 
     public function testWillInstantiateConfigWithoutNamingStrategySetting()
@@ -119,4 +117,3 @@ class ConfigurationFactoryTest extends PHPUnit_Framework_TestCase
         $this->factory->createService($this->serviceManager);
     }
 }
-

@@ -25,7 +25,6 @@ use Doctrine\DBAL\Logging\DebugStack;
 use Doctrine\ORM\Configuration as ORMConfiguration;
 use Zend\ServiceManager\ServiceManager;
 
-
 class SQLLoggerCollectorFactoryTest extends TestCase
 {
     /**
@@ -100,7 +99,6 @@ class SQLLoggerCollectorFactoryTest extends TestCase
             ->method('startQuery')
             ->with($this->equalTo('test query'));
 
-
         $configuration = new ORMConfiguration();
         $configuration->setSQLLogger($originalLogger);
         $this->services->setService('doctrine.configuration.orm_default', $configuration);
@@ -162,6 +160,6 @@ class SQLLoggerCollectorFactoryTest extends TestCase
         );
         /* @var $service \DoctrineORMModule\Collector\SQLLoggerCollector */
         $service = $this->factory->createService($this->services);
-        $this->assertSame('test_collector_name', $service->getName());
+        $this->assertSame('doctrine.sql_logger_collector.test_collector_name', $service->getName());
     }
 }

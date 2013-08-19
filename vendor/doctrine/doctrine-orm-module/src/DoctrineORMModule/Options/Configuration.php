@@ -35,8 +35,17 @@ class Configuration extends DBALConfiguration
     protected $queryCache = 'array';
 
     /**
+     * Set the cache key for the result cache. Cache key
+     * is assembled as "doctrine.cache.{key}" and pulled from
+     * service locator.
+     *
+     * @var string
+     */
+    protected $resultCache = 'array';
+
+    /**
      * Set the driver key for the metadata driver. Driver key
-     * is assembeled as "doctrine.driver.{key}" and pulled from
+     * is assembled as "doctrine.driver.{key}" and pulled from
      * service locator.
      *
      * @var string
@@ -98,7 +107,7 @@ class Configuration extends DBALConfiguration
     /**
      * Keys must be the name of the custom filter and the value must be
      * the class name for the custom filter.
-     * 
+     *
      * @var array
      */
     protected $filters = array();
@@ -230,6 +239,25 @@ class Configuration extends DBALConfiguration
     }
 
     /**
+     * @param  string $resultCache
+     * @return self
+     */
+    public function setResultCache($resultCache)
+    {
+        $this->resultCache = $resultCache;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getResultCache()
+    {
+        return "doctrine.cache.{$this->resultCache}";
+    }
+
+    /**
      * @param  array $namedNativeQueries
      * @return self
      */
@@ -287,21 +315,23 @@ class Configuration extends DBALConfiguration
     }
 
     /**
-     * 
-     * @param array $filters
+     *
+     * @param  array $filters
      * @return self
      */
-    public function setFilters($filters) {
+    public function setFilters($filters)
+    {
         $this->filters = $filters;
 
         return $this;
     }
-    
+
     /**
-     * 
+     *
      * @return array
      */
-    public function getFilters() {
+    public function getFilters()
+    {
         return $this->filters;
     }
 
@@ -382,7 +412,7 @@ class Configuration extends DBALConfiguration
     }
 
     /**
-     * @param array $modes
+     * @param  array $modes
      * @return self
      */
     public function setCustomHydrationModes($modes)
@@ -401,14 +431,13 @@ class Configuration extends DBALConfiguration
     }
 
     /**
-     * @param string|null|NamingStrategy $namingStrategy
+     * @param  string|null|NamingStrategy $namingStrategy
      * @return self
-     * @throws InvalidArgumentException when the provided naming strategy does not fit the expected type
+     * @throws InvalidArgumentException   when the provided naming strategy does not fit the expected type
      */
     public function setNamingStrategy($namingStrategy)
     {
-        if (
-            null === $namingStrategy
+        if (null === $namingStrategy
             || is_string($namingStrategy)
             || $namingStrategy instanceof NamingStrategy
         ) {
@@ -417,11 +446,13 @@ class Configuration extends DBALConfiguration
             return $this;
         }
 
-        throw new InvalidArgumentException(sprintf(
-            'namingStrategy must be either a string, a Doctrine\ORM\Mapping\NamingStrategy '
+        throw new InvalidArgumentException(
+            sprintf(
+                'namingStrategy must be either a string, a Doctrine\ORM\Mapping\NamingStrategy '
                 . 'instance or null, %s given',
-            is_object($namingStrategy) ? get_class($namingStrategy) : gettype($namingStrategy)
-        ));
+                is_object($namingStrategy) ? get_class($namingStrategy) : gettype($namingStrategy)
+            )
+        );
     }
 
     /**

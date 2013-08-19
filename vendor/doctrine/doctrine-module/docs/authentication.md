@@ -23,7 +23,7 @@ return array(
     'doctrine' => array(
         'authentication' => array(
             'orm_default' => array(
-                'object_manager' => 'Doctrine\ORM\Entity\Manager',
+                'object_manager' => 'Doctrine\ORM\EntityManager',
                 'identity_class' => 'Application\Entity\User',
                 'identity_property' => 'email',
                 'credential_property' => 'password',
@@ -53,8 +53,8 @@ Here is an example code that adds the `credential_callable` function to our prev
 return array(
     'doctrine' => array(
         'authentication' => array(
-            'orm_default => array(
-                'object_manager' => 'Doctrine\ORM\Entity\Manager',
+            'orm_default' => array(
+                'object_manager' => 'Doctrine\ORM\EntityManager',
                 'identity_class' => 'Application\Entity\User',
                 'identity_property' => 'email',
                 'credential_property' => 'password',

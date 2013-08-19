@@ -19,36 +19,19 @@
 
 namespace DoctrineORMModule;
 
-use DoctrineModule\Service\DriverFactory;
-use DoctrineModule\Service\EventManagerFactory;
-
-use DoctrineModule\Service\Authentication;
-use DoctrineORMModule\Service\ConfigurationFactory as ORMConfigurationFactory;
-use DoctrineORMModule\Service\EntityManagerFactory;
-use DoctrineORMModule\Service\EntityResolverFactory;
-use DoctrineORMModule\Service\DBALConnectionFactory;
-use DoctrineORMModule\Service\SQLLoggerCollectorFactory;
-use DoctrineORMModule\Form\Annotation\AnnotationBuilder;
-
-use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
-use Zend\ModuleManager\Feature\BootstrapListenerInterface;
-use Zend\ModuleManager\Feature\ServiceProviderInterface;
+use Zend\ModuleManager\Feature\ControllerProviderInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
+use Zend\ModuleManager\Feature\InitProviderInterface;
+use Zend\ModuleManager\Feature\DependencyIndicatorInterface;
+use Zend\ModuleManager\ModuleManagerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Loader\AutoloaderFactory;
 use Zend\Loader\StandardAutoloader;
 use Zend\EventManager\EventInterface;
 
-use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use Symfony\Component\Console\Helper\DialogHelper;
 use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
 use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
-use Doctrine\DBAL\Migrations\Tools\Console\Command\DiffCommand;
-use Doctrine\DBAL\Migrations\Tools\Console\Command\ExecuteCommand;
-use Doctrine\DBAL\Migrations\Tools\Console\Command\GenerateCommand;
-use Doctrine\DBAL\Migrations\Tools\Console\Command\MigrateCommand;
-use Doctrine\DBAL\Migrations\Tools\Console\Command\StatusCommand;
-use Doctrine\DBAL\Migrations\Tools\Console\Command\VersionCommand;
+use Zend\Stdlib\ArrayUtils;
 
 /**
  * Base module for Doctrine ORM.
@@ -59,68 +42,25 @@ use Doctrine\DBAL\Migrations\Tools\Console\Command\VersionCommand;
  * @author  Marco Pivetta <ocramius@gmail.com>
  */
 class Module implements
-    AutoloaderProviderInterface,
-    BootstrapListenerInterface,
-    ServiceProviderInterface,
-    ConfigProviderInterface
+    ControllerProviderInterface,
+    ConfigProviderInterface,
+    InitProviderInterface,
+    DependencyIndicatorInterface
 {
     /**
      * {@inheritDoc}
      */
-    public function getAutoloaderConfig()
+    public function init(ModuleManagerInterface $manager)
     {
-        return array(
-            AutoloaderFactory::STANDARD_AUTOLOADER => array(
-                StandardAutoloader::LOAD_NS => array(
-                    __NAMESPACE__ => __DIR__,
-                ),
-            ),
+        $events = $manager->getEventManager();
+        // Initialize logger collector once the profiler is initialized itself
+        $events->attach(
+            'profiler_init',
+            function () use ($manager) {
+                $manager->getEvent()->getParam('ServiceManager')->get('doctrine.sql_logger_collector.orm_default');
+            }
         );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function onBootstrap(EventInterface $e)
-    {
-        /* @var $app \Zend\Mvc\ApplicationInterface */
-        $app    = $e->getTarget();
-        $events = $app->getEventManager()->getSharedManager();
-
-        // Attach to helper set event and load the entity manager helper.
-        $events->attach('doctrine', 'loadCli.post', function(EventInterface $e) {
-            /* @var $cli \Symfony\Component\Console\Application */
-            $cli = $e->getTarget();
-
-            ConsoleRunner::addCommands($cli);
-            $cli->addCommands(array(
-                new DiffCommand(),
-                new ExecuteCommand(),
-                new GenerateCommand(),
-                new MigrateCommand(),
-                new StatusCommand(),
-                new VersionCommand(),
-            ));
-
-            /* @var $sm ServiceLocatorInterface */
-            $sm = $e->getParam('ServiceManager');
-            /* @var $em \Doctrine\ORM\EntityManager */
-            $em = $sm->get('doctrine.entitymanager.orm_default');
-            $helperSet = $cli->getHelperSet();
-            $helperSet->set(new DialogHelper(), 'dialog');
-            $helperSet->set(new ConnectionHelper($em->getConnection()), 'db');
-            $helperSet->set(new EntityManagerHelper($em), 'em');
-        });
-
-        $config = $app->getServiceManager()->get('Config');
-        $app->getServiceManager()->get('doctrine.entity_resolver.orm_default');
-
-        if (
-            isset($config['zenddevelopertools']['profiler']['enabled'])
-            && $config['zenddevelopertools']['profiler']['enabled']
-        ) {
-            $app->getServiceManager()->get('doctrine.sql_logger_collector.orm_default');
-        }
+        $events->getSharedManager()->attach('doctrine', 'loadCli.post', array($this, 'initializeConsole'));
     }
 
     /**
@@ -134,31 +74,75 @@ class Module implements
     /**
      * {@inheritDoc}
      */
-    public function getServiceConfig()
+    public function getControllerConfig()
     {
-        return array(
-            'aliases' => array(
-                'Doctrine\ORM\EntityManager' => 'doctrine.entitymanager.orm_default',
-            ),
-            'factories' => array(
+        return include __DIR__ . '/../../config/controllers.config.php';
+    }
 
-                'doctrine.authenticationadapter.orm_default'  => new Authentication\AdapterFactory('orm_default'),
-                'doctrine.authenticationstorage.orm_default'  => new Authentication\StorageFactory('orm_default'),
-                'doctrine.authenticationservice.orm_default'  => new Authentication\AuthenticationServiceFactory('orm_default'),
+    /**
+     * {@inheritDoc}
+     */
+    public function getModuleDependencies()
+    {
+        return array('DoctrineModule');
+    }
 
-                'doctrine.connection.orm_default'           => new DBALConnectionFactory('orm_default'),
-                'doctrine.configuration.orm_default'        => new ORMConfigurationFactory('orm_default'),
-                'doctrine.entitymanager.orm_default'        => new EntityManagerFactory('orm_default'),
+    /**
+     * Initializes the console with additional commands from the ORM, DBAL and (optionally) DBAL\Migrations
+     *
+     * @param \Zend\EventManager\EventInterface $event
+     *
+     * @return void
+     */
+    public function initializeConsole(EventInterface $event)
+    {
+        /* @var $cli \Symfony\Component\Console\Application */
+        $cli            = $event->getTarget();
+        /* @var $serviceLocator \Zend\ServiceManager\ServiceLocatorInterface */
+        $serviceLocator = $event->getParam('ServiceManager');
 
-                'doctrine.driver.orm_default'               => new DriverFactory('orm_default'),
-                'doctrine.eventmanager.orm_default'         => new EventManagerFactory('orm_default'),
-                'doctrine.entity_resolver.orm_default'      => new EntityResolverFactory('orm_default'),
-                'doctrine.sql_logger_collector.orm_default' => new SQLLoggerCollectorFactory('orm_default'),
-
-                'DoctrineORMModule\Form\Annotation\AnnotationBuilder' => function(ServiceLocatorInterface $sl) {
-                    return new AnnotationBuilder($sl->get('doctrine.entitymanager.orm_default'));
-                },
-            ),
+        $commands = array(
+            'doctrine.dbal_cmd.runsql',
+            'doctrine.dbal_cmd.import',
+            'doctrine.orm_cmd.clear_cache_metadata',
+            'doctrine.orm_cmd.clear_cache_result',
+            'doctrine.orm_cmd.clear_cache_query',
+            'doctrine.orm_cmd.schema_tool_create',
+            'doctrine.orm_cmd.schema_tool_update',
+            'doctrine.orm_cmd.schema_tool_drop',
+            'doctrine.orm_cmd.ensure_production_settings',
+            'doctrine.orm_cmd.convert_d1_schema',
+            'doctrine.orm_cmd.generate_repositories',
+            'doctrine.orm_cmd.generate_entities',
+            'doctrine.orm_cmd.generate_proxies',
+            'doctrine.orm_cmd.convert_mapping',
+            'doctrine.orm_cmd.run_dql',
+            'doctrine.orm_cmd.validate_schema',
+            'doctrine.orm_cmd.info',
         );
+
+        if (class_exists('Doctrine\\DBAL\\Migrations\\Version')) {
+            $commands = ArrayUtils::merge(
+                $commands,
+                array(
+                    'doctrine.migrations_cmd.execute',
+                    'doctrine.migrations_cmd.generate',
+                    'doctrine.migrations_cmd.migrate',
+                    'doctrine.migrations_cmd.status',
+                    'doctrine.migrations_cmd.version',
+                    'doctrine.migrations_cmd.diff',
+                )
+            );
+        }
+
+        $cli->addCommands(array_map(array($serviceLocator, 'get'), $commands));
+
+        /* @var $entityManager \Doctrine\ORM\EntityManager */
+        $entityManager = $serviceLocator->get('doctrine.entitymanager.orm_default');
+        $helperSet     = $cli->getHelperSet();
+
+        $helperSet->set(new DialogHelper(), 'dialog');
+        $helperSet->set(new ConnectionHelper($entityManager->getConnection()), 'db');
+        $helperSet->set(new EntityManagerHelper($entityManager), 'em');
     }
 }

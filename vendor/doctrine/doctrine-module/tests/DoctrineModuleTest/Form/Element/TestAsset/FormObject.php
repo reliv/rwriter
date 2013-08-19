@@ -46,6 +46,16 @@ class FormObject
     /**
      * @var string|null
      */
+    protected $firstname;
+
+    /**
+     * @var string|null
+     */
+    protected $surname;
+
+    /**
+     * @var string|null
+     */
     protected $password;
 
     public function __toString()
@@ -55,6 +65,8 @@ class FormObject
 
     /**
      * @param int $id
+     *
+     * @return self
      */
     public function setId($id)
     {
@@ -64,6 +76,8 @@ class FormObject
 
     /**
      * @param string $email
+     *
+     * @return self
      */
     public function setEmail($email)
     {
@@ -81,6 +95,8 @@ class FormObject
 
     /**
      * @param string $password
+     *
+     * @return self
      */
     public function setPassword($password)
     {
@@ -98,6 +114,8 @@ class FormObject
 
     /**
      * @param string $username
+     *
+     * @return self
      */
     public function setUsername($username)
     {
@@ -111,5 +129,51 @@ class FormObject
     public function getUsername()
     {
         return $this->username;
+    }
+
+    /**
+     * @param string $firstname
+     *
+     * @return self
+     */
+    public function setFirstname($firstname)
+    {
+        $this->firstname = (string) $firstname;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getFirstname()
+    {
+        return $this->firstname;
+    }
+
+    /**
+     * @param string $surname
+     *
+     * @return self
+     */
+    public function setSurname($surname)
+    {
+        $this->surname = (string) $surname;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getSurname()
+    {
+        return $this->surname;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getName()
+    {
+        return isset($this->firstname) && isset($this->surname)? $this->firstname . " " . $this->surname : null;
     }
 }

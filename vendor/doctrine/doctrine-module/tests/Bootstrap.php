@@ -19,41 +19,30 @@
 
 use DoctrineModuleTest\ServiceManagerTestCase;
 
-chdir(__DIR__);
+ini_set('error_reporting', E_ALL);
 
-$previousDir = '.';
+$files = array(__DIR__ . '/../vendor/autoload.php', __DIR__ . '/../../../autoload.php');
 
-while (!file_exists('config/application.config.php')) {
-    $dir = dirname(getcwd());
+foreach ($files as $file) {
+    if (file_exists($file)) {
+        $loader = require $file;
 
-    if ($previousDir === $dir) {
-        throw new RuntimeException(
-            'Unable to locate "config/application.config.php":'
-            . ' is DoctrineModule in a sub-directory of your application skeleton?'
-        );
+        break;
     }
-
-    $previousDir = $dir;
-    chdir($dir);
 }
 
-switch (true){
-    case file_exists(__DIR__ . '/../vendor/autoload.php'):
-        $loader = include_once __DIR__ . '/../vendor/autoload.php';
-        break;
-    case file_exists(__DIR__ . '/../../../autoload.php'):
-        $loader = include_once __DIR__ . '/../../../autoload.php';
-        break;
-    default:
-        throw new RuntimeException('vendor/autoload.php could not be found. Did you run `php composer.phar install`?');
+if (! isset($loader)) {
+    throw new RuntimeException('vendor/autoload.php could not be found. Did you run `php composer.phar install`?');
 }
 
-$loader->add('DoctrineModuleTest', __DIR__);
+/* @var $loader \Composer\Autoload\ClassLoader */
+$loader->add('DoctrineModuleTest\\', __DIR__);
 
-if (!$config = @include __DIR__ . '/TestConfiguration.php') {
+if (file_exists(__DIR__ . '/TestConfiguration.php')) {
+    $config = require __DIR__ . '/TestConfiguration.php';
+} else {
     $config = require __DIR__ . '/TestConfiguration.php.dist';
 }
 
-ServiceManagerTestCase::setServiceManagerConfiguration(
-    isset($configuration['service_manager']) ? $configuration['service_manager'] : array()
-);
+ServiceManagerTestCase::setConfiguration($config);
+unset($files, $file, $loader, $config);
