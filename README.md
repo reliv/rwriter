@@ -13,10 +13,10 @@ Currently R-Write is still in development and is NOT for use on a production sys
 Stand alone or complete application Installation
 ------------
 
-Using Git submodules
+Using Git submodules  
 --------------------
     git clone git@github.com:reliv/rwriter.git --recursive
-
+    
 Virtual Host
 ------------
 Afterwards, set up a virtual host to point to the public/ directory of the
