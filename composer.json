@@ -20,6 +20,7 @@
     "reliv/rcm-html-purifier": ">= 0.2",
     "reliv/rcm-login": ">= 0.2",
     "reliv/zf2-factories-as-configuration": ">= 1.0",
+    "reliv/rcm-dynamic-navigation": ">= 1.3",
     "reliv/rcm-user": ">= 0.2",
     "reliv/elfinder": "2.0.0-alpha",
     "studio-42/elfinder": "2.*@dev",
