@@ -9,6 +9,19 @@
   "minimum-stability": "beta",
   "homepage": "http://framework.zend.com/",
   "require": {
-
+    "reliv/rcm": ">= 0.2",
+    "reliv/rcm-action-button": ">= 0.2",
+    "reliv/rcm-plugins": ">= 0.2",
+    "reliv/rcm-admin": ">= 0.2",
+    "reliv/rcm-api-lib": ">= 0.1",
+    "reliv/rcm-call-to-action-box": ">= 0.1",
+    "reliv/rcm-config": ">= 0.0.2",
+    "reliv/rcm-html-area": ">= 0.2",
+    "reliv/rcm-html-purifier": ">= 0.2",
+    "reliv/rcm-login": ">= 0.2",
+    "reliv/zf2-factories-as-configuration": ">= 1.0",
+    "reliv/rcm-user": ">= 0.2",
+    "reliv/elfinder": "2.0.0-alpha",
+    "studio-42/elfinder": "2.*@dev",
   }
 }
