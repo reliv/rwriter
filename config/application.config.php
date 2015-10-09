@@ -28,6 +28,7 @@ return array(
         'RcmRssFeed',
         'RcmTabs',
         'RcmTinyMce',
+        'RcmUser',
         //MUST BE AT BOTTOM OF DEFINITION
         'Application',
     ),
