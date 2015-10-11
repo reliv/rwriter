@@ -1,4 +1,5 @@
 .idea
 vagrant_files
 Vagrantfile
+.vagrant
 vendor

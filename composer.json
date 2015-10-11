@@ -9,6 +9,7 @@
   "minimum-stability": "beta",
   "homepage": "http://framework.zend.com/",
   "require": {
+    "reliv/rcm-default-theme": ">= 0.0.1",
     "reliv/rcm": ">= 0.2",
     "reliv/rcm-action-button": ">= 0.2",
     "reliv/rcm-plugins": ">= 0.2",
