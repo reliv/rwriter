@@ -1,7 +1,7 @@
 <?php
+
 return array(
     'modules' => array(
-
         //Rcm Dependencies
         'DoctrineModule',
         'DoctrineORMModule',
@@ -17,7 +17,6 @@ return array(
         'RcmDynamicNavigation',
         'RcmHtmlArea',
         'RcmHtmlPurifier',
-        'RcmI18n',
         'RcmLogin',
         'DomainRedirector',
         'RcmAngularJs',
@@ -28,12 +27,15 @@ return array(
         'RcmRssFeed',
         'RcmTabs',
         'RcmTinyMce',
-        //MUST BE AT BOTTOM OF DEFINITION
-        'Application',
+        'Reliv\RcmDefaultTheme',
+        'Reliv\RcmInstall',
+        'RcmUser',
+        'AssetManager'
     ),
     'module_listener_options' => array(
         'config_glob_paths' => array(
             'config/autoload/{,*.}{global,local}.php',
+            'data/rcm/config.php'
         ),
         'module_paths' => array(
             './module',
@@ -45,3 +47,4 @@ return array(
         ),
     ),
 );
+
