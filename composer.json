@@ -9,6 +9,7 @@
   "minimum-stability": "beta",
   "homepage": "http://framework.zend.com/",
   "require": {
+    "reliv/rcm-default-theme": ">= 0.0.1",
     "reliv/rcm": ">= 0.2",
     "reliv/rcm-action-button": ">= 0.2",
     "reliv/rcm-plugins": ">= 0.2",
@@ -24,5 +25,12 @@
     "reliv/rcm-user": ">= 0.2",
     "reliv/elfinder": "2.0.0-alpha",
     "studio-42/elfinder": "2.*@dev"
+  },
+
+  "autoload": {
+    "psr-4": {
+      "Reliv\\RcmInstall\\": "vendor/reliv/rcm-install/src/",
+      "Reliv\\RcmDefaultTheme\\" : "vendor/reliv/rcm-default-theme/src/"
+    }
   }
 }
