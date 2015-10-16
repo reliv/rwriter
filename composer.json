@@ -25,5 +25,5 @@
     "reliv/rcm-user": ">= 0.2",
     "reliv/elfinder": "2.0.0-alpha",
     "studio-42/elfinder": "2.*@dev"
-  },
+  }
 }
