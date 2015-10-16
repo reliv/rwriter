@@ -9,7 +9,8 @@
   "minimum-stability": "beta",
   "homepage": "http://framework.zend.com/",
   "require": {
-    "rcm/default-theme": ">= 0.3.1",
+    "rcm/default-theme": ">= 0.0.1",
+    "rcm/install": ">= 0.0.1",
     "rcm/core": ">= 0.3.0",
     "rcm/action-button": ">= 0.3.0",
     "rcm/plugins": ">= 0.3.0",
@@ -24,7 +25,6 @@
     "rcm/dynamic-navigation": ">= 0.3.0",
     "rcm/user": ">= 0.3.0",
     "reliv/elfinder": "2.0.0-alpha",
-    "rcm/install": ">= 0.0.1",
     "studio-42/elfinder": "2.x-dev"
   }
 }
