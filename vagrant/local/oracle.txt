@@ -1,5 +1,0 @@
-# Oracle Instant Client
-LD_LIBRARY_PATH="/opt/oracle/instantclient"
-TNS_ADMIN="/opt/oracle/instantclient"
-ORACLE_BASE="/opt/oracle/instantclient"
-ORACLE_HOME=$ORACLE_BASE
