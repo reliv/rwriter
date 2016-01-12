@@ -1,0 +1,34 @@
+{
+  "name": "rcm/skeleton-application",
+  "description": "Skeleton Application for ZF2",
+  "license": "BSD-3-Clause",
+  "keywords": [
+    "framework",
+    "zf2"
+  ],
+  "minimum-stability": "beta",
+  "homepage": "http://framework.zend.com/",
+  "require": {
+    "rcm/default-theme": ">= 0.0.1",
+    "rcm/install": ">= 0.0.1",
+    "rcm/core": ">= 0.3.0",
+    "rcm/action-button": ">= 0.3.0",
+    "rcm/plugins": ">= 0.3.0",
+    "rcm/admin": ">= 0.3.0",
+    "rcm/api-lib": ">= 0.3.0",
+    "rcm/call-to-action-box": ">= 0.3.0",
+    "rcm/config": ">= 0.3.0",
+    "rcm/html-area": ">= 0.3.0",
+    "rcm/html-purifier": ">= 0.3.0",
+    "rcm/login": ">= 0.3.0",
+    "reliv/zf-config-factories": ">= 1.0.7",
+    "rcm/dynamic-navigation": ">= 0.3.0",
+    "rcm/user": ">= 0.3.0",
+    "reliv/elfinder": "2.0.0-alpha",
+    "studio-42/elfinder": "2.x-dev"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "4.6.*",
+    "squizlabs/php_codesniffer": "2.*"
+  }
+}
