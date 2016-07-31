@@ -1,30 +1,55 @@
 #!/usr/bin/env bash
 
-## Install
-export DEBIAN_FRONTEND=noninteractive;
-apt-get -y install unzip build-essential git php5-fpm php5-cli php5-dev nginx mysql-client mysql-server php5-mysql php5-radius php5-sqlite php5-xdebug php5-intl php5-imap php5-gd php5-curl php5-imagick php-pear 2>&1;
+rm /var/lib/dpkg/lock;
 
-curl -sS https://getcomposer.org/installer | php;
-mv composer.phar /usr/local/bin/composer;
+export DEBIAN_FRONTEND=noninteractive
+debconf-set-selections <<< 'mysql-server mysql-server/root_password password root'
+debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password root'
 
-sed -i.bak s/bind-address/#bind-address/g /etc/mysql/my.cnf;
-mysql -u root < /vagrant/vagrant/db_setup.sql 2>&1;
+apt-get update;
+apt-get -y dist-upgrade;
+apt-get -y install unzip build-essential git php7.0-fpm php7.0-cli php7.0-dev \
+mysql-client-5.7 mysql-client-core-5.7 mysql-server-5.7 php7.0-mysql php-radius \
+php7.0-sqlite3 php7.0-intl php7.0-imap php7.0-gd php7.0-curl php-imagick php7.0-mcrypt \
+php-redis php-pear php-memcached redis-server redis-tools zip nginx;
 
-cp /vagrant/vagrant/nginx/sites-available/default /etc/nginx/sites-available/default;
-cp /vagrant/vagrant/php5/fpm/php.ini /etc/php5/fpm/php.ini;
-cp /vagrant/vagrant/php5/fpm/pool.d/www.conf /etc/php5/fpm/pool.d/www.conf;
+pecl -q install xdebug;
 
+echo "Setting Up MySql";
+sed -i "s/.*bind-address.*/bind-address = 0.0.0.0/" /etc/mysql/mysql.conf.d/mysqld.cnf
 service mysql restart;
-service php5-fpm restart;
+
+echo "UPDATE mysql.user SET host='%' WHERE user='root' AND host='localhost'; FLUSH PRIVILEGES;" | mysql -u root -proot 2>/dev/null;
+echo 'CREATE DATABASE VCMS; CREATE DATABASE TESTS;' | mysql -u root -proot 2>/dev/null;
+
+echo "Updating Nginx"
+sed -i "s/.*user www-data;.*/user vagrant;/" /etc/nginx/nginx.conf
+cp /vagrant/vagrant/nginx/sites-available/* /etc/nginx/sites-available
+
+#turn on all sites
+SITESAVAILABLE="/etc/nginx/sites-available/";
+SITESENABLED="/etc/nginx/sites-enabled/"
+FILES="$SITESAVAILABLE*";
+for f in $FILES
+do
+  filename=${f##$SITESAVAILABLE}
+  rm "$SITESENABLED$filename";
+  ln -s "$f" "$SITESENABLED$filename"
+done
+
 service nginx restart;
 
-chmod -R 777 /vagrant/data;
-chmod -R 777 /vagrant/public;
 
-su vagrant;
-composer global require fxp/composer-asset-plugin;
+echo "Updating PHP"
+cp /vagrant/vagrant/php/7.0/fpm/pool.d/www.conf /etc/php/7.0/fpm/pool.d/www.conf;
+cp /vagrant/vagrant/php/7.0/fpm/php.ini /etc/php/7.0/fpm/php.ini;
+cp /vagrant/vagrant/php/7.0/mods-available/xdebug.ini /etc/php/7.0/mods-available/xdebug.ini;
+sed -i "s/zend_extension=opcache.so.*/;zend_extension=opcache.so/" /etc/php/7.0/mods-available/opcache.ini
+phpenmod xdebug
+service php7.0-fpm restart
 
-if [ -f "/vagrant/vagrant/local/bootstrap.sh" ]; then
-   source '/vagrant/vagrant/local/bootstrap.sh';
-fi;
+echo "Installing Node"
+wget -q https://nodejs.org/dist/v5.10.1/node-v5.10.1-linux-x64.tar.gz
+tar -C /usr/local --strip-components 1 -xzf node-v5.10.1-linux-x64.tar.gz
+rm node-v5.10.1-linux-x64.tar.gz
 

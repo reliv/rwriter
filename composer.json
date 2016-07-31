@@ -24,10 +24,13 @@
     "reliv/zf-config-factories": ">= 1.0.7",
     "rcm/dynamic-navigation": ">= 0.3.0",
     "rcm/user": ">= 0.3.0",
-    "reliv/elfinder": "2.0.0-alpha"
+    "reliv/elfinder": ">2.0.0"
   },
   "require-dev": {
     "phpunit/phpunit": "4.6.*",
     "squizlabs/php_codesniffer": "2.*"
+  },
+  "extra": {
+    "asset-pattern-skip-version": "(-beta*|-patch*|-rc*|-RC*)"
   }
 }
